@@ -1,14 +1,22 @@
 import random
+from gost import ecb
+from utils import module_degree
 import sys
 
 CONSTANT_P = 31481
 CONSTANT_Q = 787
 CONSTANT_A = 1928
+CONSTANT_X = 2
 
 
 def hash_calc(message: str) -> int:
     # Пока нерабочая функция, должна возвращать хэш файла
-    h = 1488
+
+    key32 = "00000000000000000000000000000000"
+    key8 = "00000000"
+   # print(len(key8))
+    h = ecb(key8,message, True)
+    print(h)
     return h
 
 
@@ -20,8 +28,10 @@ def get_sign(file_path: str, hash_summ: int):
     Вычесленная подпись (r, s) записывается в filename.sign
     """
     k_rand: int = random.randint(1, CONSTANT_Q - 1)
-    r: int = 235
-    s: int = 1
+    r: int = module_degree(module_degree(CONSTANT_A, k_rand, CONSTANT_P), 1, CONSTANT_Q)
+    s: int = module_degree((k_rand * hash_summ + CONSTANT_X * r), 1, CONSTANT_Q)
+    # print(r)
+    # print(s)
     if r == 0 or s == 0:
         get_sign(file_path, hash_summ)
     sign: tuple = (r, s)

@@ -7,7 +7,7 @@ from utils import pad_size
 from utils import unpad2
 
 
-KEYSIZE = 32
+KEYSIZE = 8
 BLOCKSIZE = 8
 C1 = 0x01010104
 C2 = 0x01010101
@@ -78,15 +78,12 @@ def validate_key(key):
 def xcrypt(seq, sbox, key, ns):
     s = sbox
     w = bytearray(key)
-    x = [
-        w[0 + i * 4] |
-        w[1 + i * 4] << 8 |
-        w[2 + i * 4] << 16 |
-        w[3 + i * 4] << 24 for i in range(8)
-    ]
+    #print(len(w))
+    x = w[0] << 8
     n1, n2 = ns
+    #print(x)
     for i in seq:
-        n1, n2 = _shift11(_K(s, (n1 + x[i]) % (2 ** 32))) ^ n2, n1
+        n1, n2 = _shift11(_K(s, (n1 + x) % (2 ** 32))) ^ n2, n1
     return n1, n2
 
 
@@ -103,16 +100,20 @@ def ecb(key, data, action: bool, sbox=SBOX):
 
     validate_key(key)
     result = []
+    key = key.encode()
     for i in xrange(0, len(data), BLOCKSIZE):
         if action == True:
-            result.append(ns2block(encrypt(
+            key = int.from_bytes((ns2block(encrypt(
                 sbox, key, block2ns(data[i:i + BLOCKSIZE])
-            )))
+            ))), 'big') ^ int.from_bytes(key, 'big')
+            key = str(key).encode()
+            print(type(key))
+            print(key)
         else:
             result.append(ns2block(decrypt(
                 sbox, key, block2ns(data[i:i + BLOCKSIZE])
             )))
-    return b"".join(result)
+    return int.from_bytes(key, 'big')
 
 
 ecb_encrypt = partial(ecb, action=encrypt)

@@ -43,3 +43,8 @@ def unpad2(data, blocksize):
         if c != 0:
             raise ValueError("Ошибка данных")
     return data[:-(blocksize - pad_index)]
+
+
+def module_degree(basis: int, grade: int, module: int, optional=1) -> int:
+    # Возведение в степень по модулю
+    return (optional * basis ** grade) % module
