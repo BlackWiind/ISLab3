@@ -107,8 +107,6 @@ def ecb(key, data, action: bool, sbox=SBOX):
                 sbox, key, block2ns(data[i:i + BLOCKSIZE])
             ))), 'big') ^ int.from_bytes(key, 'big')
             key = str(key).encode()
-            print(type(key))
-            print(key)
         else:
             result.append(ns2block(decrypt(
                 sbox, key, block2ns(data[i:i + BLOCKSIZE])

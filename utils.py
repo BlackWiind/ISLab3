@@ -45,6 +45,16 @@ def unpad2(data, blocksize):
     return data[:-(blocksize - pad_index)]
 
 
-def module_degree(basis: int, grade: int, module: int, optional=1) -> int:
+def module_degree(basis: int, grade: int, module: int, optional: int = 1) -> int:
     # Возведение в степень по модулю
     return (optional * basis ** grade) % module
+
+
+def module_inversion(base: int, module: int, option: int = 1) -> int:
+    # Обратная инверсия по модулю
+    base = base * option
+    for i in range(module):
+        if (base * i) % module == 1:
+            answer = i
+    if answer:
+        return answer
