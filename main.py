@@ -10,6 +10,16 @@ CONSTANT_X = 2
 
 
 def find_v(r: int, s: int, h: int) -> int:
+    """
+    Находит параметр V для сравнения с ЭЦП.
+    Полученное значение должно быть равно первому числу
+    в кортеже ЭЦП.
+
+    :param r: int
+    :param s: int
+    :param h: int
+    :return: int
+    """
     y = module_degree(CONSTANT_A, CONSTANT_X, CONSTANT_P)
     u_1 = module_degree(module_inversion(h, CONSTANT_Q), 1, CONSTANT_Q, s)
     u_2 = module_degree(module_inversion(h, CONSTANT_Q), 1, CONSTANT_Q, -r)
@@ -17,8 +27,14 @@ def find_v(r: int, s: int, h: int) -> int:
 
 
 def hash_calc(message: str) -> int:
-    # Пока нерабочая функция, должна возвращать хэш файла
+    """
 
+    Вычисляет хэш сообщения, используя ГОСТ 28147-89 в режиме ecb,
+    начальный ключ "00000000"
+
+    :param message: str
+    :return: hash: int
+    """
     key8 = "00000000"
     h = ecb(key8, message, True)
     return h
@@ -26,7 +42,7 @@ def hash_calc(message: str) -> int:
 
 def get_sign(file_path: str, hash_summ: int):
     """
-    Получает рандомное k 0 < k < q
+    Получает рандомное k, 0 < k < q
     Вычисляет r,s на основе k
     Если r или s == 0 вычисление k происходит снова
     Вычесленная подпись (r, s) записывается в filename.sign
@@ -84,7 +100,7 @@ def main(file_path: str, mode: str):
 
 
 if __name__ == '__main__':
-    # main(sys.argv[1])
-    main("hello.txt", "get")
-    main("hello.txt", "check")
+    main(sys.argv[1], sys.argv[1])
+    # main("hello.txt", "get")
+    # main("hello.txt", "check")
 

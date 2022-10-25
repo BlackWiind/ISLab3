@@ -78,10 +78,8 @@ def validate_key(key):
 def xcrypt(seq, sbox, key, ns):
     s = sbox
     w = bytearray(key)
-    #print(len(w))
     x = w[0] << 8
     n1, n2 = ns
-    #print(x)
     for i in seq:
         n1, n2 = _shift11(_K(s, (n1 + x) % (2 ** 32))) ^ n2, n1
     return n1, n2
